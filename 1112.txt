@@ -1,0 +1,130 @@
+import numpy as np
+import pandas as pd 
+
+# 모델 라이브러리 선언
+from sklearn import datasets, tree
+
+# 모델 정확도 라이브러리 선언
+from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import r2_score
+
+# 시각화 라이브러리 선언
+import matplotlib.pyplot as plt
+
+
+1. 분석데이터 로딩
+
+#CSV 파일을 읽어 DataFrame 변수에 저장하기
+featuresData = pd.read_csv("../dataset./feature_regression_example.csv")
+
+featuresData.head(5) ##상위 5개 데이터표출##
+
+featuresData.corr() ## 상관관계 알수있음 ##
+
+
+
+2.데이터 형 변환
+
+featuresData.dtypes
+
+#형변환
+featuresData[['WEEK','QTY','PRO_PERCENT']]=featuresData[['WEEK','QTY','PRO_PERCENT']].astype('float64')
+featuresData.dtypes
+
+
+3. 문자데이터 코드변환(Vector연산)
+
+#case when 
+############################
+def codeConversion(df):     ### 함수선언 : def ###
+    if df == "Y":
+        return 1
+    else:
+        return 0
+
+featuresData['PROMOTIONCODE'] = featuresData['PROMOTION'].apply(codeConversion)
+featuresData.head()
+
+featuresData['HOLIDAYCODE'] = featuresData['HOLIDAY'].apply(codeConversion)
+featuresData.head()
+
+featuresData.corr()
+
+
+=====
+
+4. 데이터 셋 분리
+
+predictStd = 201630   ## 2016년 30주차 정보##
+
+#where between and (조건 절)
+trainingData = featuresData.query('YEARWEEK <= @predictStd')
+trainingData.head()
+
+#where between and (조건 절)
+testData = featuresData.query('YEARWEEK > @predictStd')
+testData.head()
+
+trainingData_feature = trainingData[['WEEK','PRO_PERCENT','HOLIDAYCODE']]
+
+trainingData_label = trainingData[['QTY']]
+
+testData_feature = testData[['WEEK','PRO_PERCENT','HOLIDAYCODE']]
+
+testData_label = testData[['QTY']]
+
+# from sklearn import tree
+#clf = tree.DecisionTreeClassifier(criterion='entropy', max_depth=3, random_state=0)
+
+5. 모델선언 및 예측
+
+#model_method= tree.DecisionTreeClassifier(criterion='gini', max_depth=5, random_state=0)
+
+# from sklearn import tree
+#model_method = tree.DecisionTreeClassifier(criterion='entropy', max_depth=3, random_state=0)
+
+
+# from sklearn import tree
+model_method = tree.DecisionTreeClassifier()
+
+
+### Extract Coefficient 머신러닝!!
+
+
+model = model_method.fit(trainingData_feature, trainingData_label)
+
+predict = model.predict(testData_feature)
+
+predict
+
+testData_label.head() #정답지#
+
+6. 데이터 정리
+
+type(predict)
+
+predictData = pd.DataFrame(predict)
+
+predictData.head()
+
+predictData.columns = ["PREDICT"]
+
+
+testData.head(1)
+
+testData.reset_index(drop=True, inplace=True)
+
+testData.head(2)
+
+predictData.reset_index(drop=True, inplace=True)
+#testData_feature.reset_index(drop=True, inplace=True)
+
+#cncatenate labels to df as a new column / column binding
+finalDf = pd.concat([testData, predictData], axis = 1)  ## axis = 1 옆으로붙이기 0= 밑으로붙이기
+
+finalDf.head()
+
+
+
+

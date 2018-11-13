@@ -1,0 +1,9 @@
+1. 라이브러리 선언
+2. 데이터 불러오기
+3. features  label
+<지도학습>
+( training 70%  - Test 30% )
+4. 모델 정의
+5. feature 학습
+6. predict
+

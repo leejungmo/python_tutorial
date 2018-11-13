@@ -1,0 +1,33 @@
+.-> tab = 해당함수표현
+13.209.112.251:3333
+<python 자료및 정보>
+
+코드입력 후 결과 도출 (시프트+엔터, 컨트롤+엔터)
+B = 셀추가
+
+
+
+import numpy as np
+import pandas as pd 
+
+# 모델 라이브러리 선언
+from sklearn import datasets, tree
+
+# 모델 정확도 라이브러리 선언
+from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import r2_score
+
+# 시각화 라이브러리 선언
+import matplotlib.pyplot as plt
+
+
+
+
+#CSV 파일을 읽어 DataFrame 변수에 저장하기
+featuresData = pd.read_csv("../dataset./feature_regression_example.csv")
+
+featuresData.head(5) = 상위 5개 데이터 표출
+
+featuresData.corr() = 상관관계 알수있음
+
